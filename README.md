@@ -32,10 +32,10 @@
 | :-----------------: | :---: | :-----: | :------------------------: | :------- |
 |     有道翻译API     |   -   |    -    |             -              | -        |
 |   youdao_app_key    |  str  |   ""    |   youdao_app_key="xxxxx"   | 应用ID   |
-|  youdao_app_secret  |  str  |   ""    | youdao_app_secret="xxxxxx" | 应用秘钥 |  |
+|  youdao_app_secret  |  str  |   ""    | youdao_app_secret="xxxxxx" | 应用秘钥 |
 |     百度翻译API     |   -   |    -    |             -              | -        |
 |    baidu_app_id     |  str  |   ""    |    baidu_app_id="11451"    | APP ID   |
-|    baidu_app_key    |  str  |   ""    |   baidu_app_key="xxxxxx"   | 密钥     |  |
+|    baidu_app_key    |  str  |   ""    |   baidu_app_key="xxxxxx"   | 密钥     |
 | 其他翻译API(待更新) |   -   |    -    |             -              | -        |
 
 ## 🌙更新日志
@@ -74,7 +74,7 @@
 
 1. 在[有道智云AI开放平台](https://ai.youdao.com/#/)注册并登录后，进入控制台
 2. 在左侧`自然语言翻译服务`里的`图片翻译`里创建应用，选择服务和接入方式分别为`图片翻译`和`API`，其他项随意。
-![Image text](https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/有道翻译.jpg)
+![Image text](https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/有道翻译.png)
 3. 创建后将`应用ID`和`应用秘钥`按照上面的配置说明分别填入.env文件里即可
 
 </details>
