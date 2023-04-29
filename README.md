@@ -28,44 +28,15 @@
 
 ~~个人感觉有道API的效果比百度好很多，但是架不住百度每个月前1w次调用免费啊~~
 
-|       config        | type  | default |          example           | usage    |
+|       配置项        | 类型  | 默认值 |          示例           | 说明    |
 | :-----------------: | :---: | :-----: | :------------------------: | :------- |
 |     有道翻译API     |   -   |    -    |             -              | -        |
 |   youdao_app_key    |  str  |   ""    |   youdao_app_key="xxxxx"   | 应用ID   |
 |  youdao_app_secret  |  str  |   ""    | youdao_app_secret="xxxxxx" | 应用秘钥 |
 |     百度翻译API     |   -   |    -    |             -              | -        |
-|    baidu_app_id     |  str  |   ""    |    baidu_app_id="11451"    | APP ID   |
+|    baidu_app_id     |  str  |   ""    |    baidu_app_id="66666"    | APP ID   |
 |    baidu_app_key    |  str  |   ""    |   baidu_app_key="xxxxxx"   | 密钥     |
 | 其他翻译API(待更新) |   -   |    -    |             -              | -        |
-
-## 🌙更新日志
-
-<details>
-<summary>点击展开</summary>
-
-- 2023-04-28:
-
-  插件发布
-
-</details>
-
-## 🎉命令
-
-1. 图片翻译 图片：单张图片翻译，也可以先发送/图片翻译再发送图片
-
-    支持 1.文字+图片 2.先文字，后图片 3.文字回复图片
-
-2. 多图片翻译 图片：如 图片翻译 图片*n ; n张图片翻译，将会以合并转发消息的形式发出
-
-    支持 1. 先文字，后多张图片 2. 文字+图片*n
-
-未完待续
-
-## ⭐效果图
-
-![Image text](https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图1.jpg)
-![Image text](https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图2.jpg)
-![Image text](https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图3.jpg)
 
 ## 🔑API-key获取
 
@@ -87,6 +58,35 @@
    3. 创建后在`管理控制台`的`总览`中找到`APP ID`和`密钥`,根据上面的配置说明填入.env.*文件
 
 </details>
+
+## 🌙更新日志
+
+<details>
+<summary>点击展开</summary>
+
+- 2023-04-28:
+
+  插件发布
+
+</details>
+
+## 🎉命令
+
+1. 图片翻译 图片：单张图片翻译，也可以先发送/图片翻译再发送图片
+
+    支持 1.文字+图片 2.先文字，后图片 3.文字回复图片
+
+2. 多图片翻译 图片：如 多图片翻译 图片*n ; n张图片翻译，将会以合并转发消息的形式发出
+
+    支持 1. 先文字，后多张图片 2. 文字+图片*n
+
+未完待续
+
+## ⭐效果图
+
+![Image text](https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图1.jpg)
+![Image text](https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图2.jpg)
+![Image text](https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图3.jpg)
 
 ## 🐦计划
 
