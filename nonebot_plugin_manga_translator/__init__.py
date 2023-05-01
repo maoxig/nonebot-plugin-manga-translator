@@ -1,9 +1,9 @@
 from nonebot.exception import MatcherException
-from nonebot.params import CommandArg,Arg
+from nonebot.params import CommandArg,Arg,ArgPlainText
 from nonebot.plugin import PluginMetadata
 from nonebot.typing import T_State
 from nonebot.matcher import Matcher
-from nonebot import on_command,logger
+from nonebot import on_command,logger,get_driver
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent,helpers,MessageSegment,Message,GroupMessageEvent
 from .utils import MangaTranslator 
 
@@ -13,14 +13,33 @@ __plugin_meta__ = PluginMetadata(
     usage="""指令：
         图片翻译 [图片] --翻译并返回翻译后的图片
         多图片翻译 [图片]*n --翻译并返回多张翻译后的图片
+        切换翻译api [api] --将该api的优先级设为最高
 """,
 )
 
 pictrans= on_command("图片翻译", priority=5, block=False,aliases={"翻译图片"})
 mul_pictrans=on_command("多图片翻译",priority=5,block=False)
-manga_trans=MangaTranslator()
+api_change=on_command("翻译api切换",priority=5,aliases={"翻译API切换","切换翻译api","切换翻译API"})
 
+manga_trans=MangaTranslator(get_driver().config.dict())
 
+@api_change.handle()
+async def _(matcher:Matcher,args:Message=CommandArg()):
+    if args.extract_plain_text():
+        matcher.set_arg("text",args)
+        
+@api_change.got("text",prompt="请输入api名称，可用api有"+str([api.__name__ for api in manga_trans.api]))
+async def _(text:str=ArgPlainText()):
+    if text not in [api.__name__ for api in manga_trans.api]:
+        await api_change.finish("无效名称，请检查输入")
+    else:
+        api_dict = {api.__name__: api for api in manga_trans.api}
+        api=api_dict[text]
+        manga_trans.api.insert(0, manga_trans.api.pop(manga_trans.api.index(api)))
+        await api_change.finish(f"{text}的优先级已设为最高")
+    
+    
+        
 @pictrans.handle()
 async def _(event:MessageEvent,matcher:Matcher,args:Message=CommandArg()):
     if event.reply:
