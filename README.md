@@ -28,13 +28,13 @@
 
 ~~个人感觉有道API的效果比百度好很多，但是架不住百度每个月前1w次调用免费啊~~
 
-|       config        | type  | default |          example           | usage    |
+|       配置项        | 类型  | 默认值 |          示例           | 说明    |
 | :-----------------: | :---: | :-----: | :------------------------: | :------- |
 |     有道翻译API     |   -   |    -    |             -              | -        |
 |   youdao_app_key    |  str  |   ""    |   youdao_app_key="xxxxx"   | 应用ID   |
 |  youdao_app_secret  |  str  |   ""    | youdao_app_secret="xxxxxx" | 应用秘钥 |
 |     百度翻译API     |   -   |    -    |             -              | -        |
-|    baidu_app_id     |  str  |   ""    |    baidu_app_id="11451"    | APP ID   |
+|    baidu_app_id     |  str  |   ""    |    baidu_app_id="66666"    | APP ID   |
 |    baidu_app_key    |  str  |   ""    |   baidu_app_key="xxxxxx"   | 密钥     |
 |     离线翻译API     |   -   |    -    |             -              | -        |
 |    offline_url    |  str  |   ""    |   offline_url="http://127.0.0.1:5003"   | 见下方说明     |
@@ -42,8 +42,8 @@
 
 ## 🌙更新日志
 
-<details>
-<summary>点击展开</summary>
+</details>
+</summary>点击展开</summary>
 
 - 2023-05-01:
 
@@ -79,12 +79,10 @@
 <img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图3.jpg" width="180" height="180">
 <img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图4.png" width="180" height="180">
 
-
-
 ## 🔑API获取
 
-<details>
-<summary>有道翻译</summary>
+</details>
+</summary>有道翻译</summary>
 
 1. 在[有道智云AI开放平台](https://ai.youdao.com/#/)注册并登录后，进入控制台
 2. 在左侧`自然语言翻译服务`里的`图片翻译`里创建应用，选择服务和接入方式分别为`图片翻译`和`API`，其他项随意。
@@ -93,8 +91,8 @@
 
 </details>
 
-<details>
-<summary>百度翻译</summary>
+</details>
+</summary>百度翻译</summary>
 
    1. 在[百度翻译开放平台](https://api.fanyi.baidu.com/)注册并登录
    2. 找到`产品服务`的`图片翻译`,申请创建
@@ -102,8 +100,8 @@
 
 </details>
 
-<details>
-<summary>离线翻译</summary>
+</details>
+</summary>离线翻译</summary>
 (该方案对设备配置要求较高，建议在有足够的硬盘空间、内存、显存，或有一台能为bot处理请求的服务器时考虑使用该方案)
 
    1. 参考[manga-image-translator](https://github.com/zyddnys/manga-image-translator)的说明，克隆仓库，并安装相关依赖(可能需要额外安装`pydensecrf`)
