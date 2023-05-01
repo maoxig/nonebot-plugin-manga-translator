@@ -42,8 +42,8 @@
 
 ## 🌙更新日志
 
-</details>
-</summary>点击展开</summary>
+<details>
+<summary>点击展开</summary>
 
 - 2023-05-01:
 
@@ -74,15 +74,15 @@
 
 ## ⭐效果图
 
-<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图1.jpg" width="180" height="180">
-<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图2.jpg" width="180" height="180">
-<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图3.jpg" width="180" height="180">
-<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图4.png" width="180" height="180">
+<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图1.jpg" width="300" height="300">
+<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图2.jpg" width="300" height="300">
+<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图3.jpg" width="300" height="300">
+<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图4.PNG" width="300" height="300">
 
 ## 🔑API获取
 
-</details>
-</summary>有道翻译</summary>
+<details>
+<summary>有道翻译</summary>
 
 1. 在[有道智云AI开放平台](https://ai.youdao.com/#/)注册并登录后，进入控制台
 2. 在左侧`自然语言翻译服务`里的`图片翻译`里创建应用，选择服务和接入方式分别为`图片翻译`和`API`，其他项随意。
@@ -91,8 +91,8 @@
 
 </details>
 
-</details>
-</summary>百度翻译</summary>
+<details>
+<summary>百度翻译</summary>
 
    1. 在[百度翻译开放平台](https://api.fanyi.baidu.com/)注册并登录
    2. 找到`产品服务`的`图片翻译`,申请创建
@@ -100,8 +100,8 @@
 
 </details>
 
-</details>
-</summary>离线翻译</summary>
+<details>
+<summary>离线翻译</summary>
 (该方案对设备配置要求较高，建议在有足够的硬盘空间、内存、显存，或有一台能为bot处理请求的服务器时考虑使用该方案)
 
    1. 参考[manga-image-translator](https://github.com/zyddnys/manga-image-translator)的说明，克隆仓库，并安装相关依赖(可能需要额外安装`pydensecrf`)
@@ -127,4 +127,4 @@
 
 - [ ] 完善插件
 
-## 喜欢的话就点个star✨吧QAQ
+## ✨喜欢的话就点个star✨吧，球球了QAQ
