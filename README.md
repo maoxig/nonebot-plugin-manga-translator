@@ -24,60 +24,24 @@
 
 2. ⚙️插件配置
 
-这些配置项必填，否则无法使用，请在机器人目录下的.env.*里填写以下选项(至少填一个平台的)
+请在机器人目录下的.env.*里填写以下选项(至少填一个平台的)，获取方式已整理好，见下方
 
-~~个人感觉有道API的效果比百度好很多，但是架不住百度每个月前1w次调用免费啊~~
+~~个人感觉就漫画翻译而言,这几家API的效果大致为有道>=百度≈离线>=火山,且火山翻译对竖版日文的翻译效果很差~~
 
-|       配置项        | 类型  | 默认值 |          示例           | 说明    |
-| :-----------------: | :---: | :-----: | :------------------------: | :------- |
-|     有道翻译API     |   -   |    -    |             -              | -        |
-|   youdao_app_key    |  str  |   ""    |   youdao_app_key="xxxxx"   | 应用ID   |
-|  youdao_app_secret  |  str  |   ""    | youdao_app_secret="xxxxxx" | 应用秘钥 |
-|     百度翻译API     |   -   |    -    |             -              | -        |
-|    baidu_app_id     |  str  |   ""    |    baidu_app_id="66666"    | APP ID   |
-|    baidu_app_key    |  str  |   ""    |   baidu_app_key="xxxxxx"   | 密钥     |
-|     离线翻译API     |   -   |    -    |             -              | -        |
-|    offline_url    |  str  |   ""    |   offline_url="http://127.0.0.1:5003"   | 见下方说明     |
-| 其他翻译API(待更新) |   -   |    -    |             -              | -        |
-
-## 🌙更新日志
-
-<details>
-<summary>点击展开</summary>
-
-- 2023-05-01:
-
-  - 添加切换api的功能，你可以将某个api优先级设为最高
-  - 适配离线翻译api[manga-image-translator](https://github.com/zyddnys/manga-image-translator),现在你可以体验本地的翻译
-
-- 2023-04-28:
-
-  插件发布
-
-</details>
-
-## 🎉命令
-
-1. 图片翻译 [图片]：单张图片翻译，也可以先发送/图片翻译再发送图片,可以如下组合
-
-    1. 文字+图片
-    2. 先文字，后图片
-    3. 文字回复图片
-
-2. 多图片翻译 [图片]：n张图片翻译，将会以合并转发消息的形式发出,可以如下组合
-
-    1. 先文字，后多张图片 
-    2. 2.文字+图片*n
-3. 切换翻译api [api]: 将该api优先级提到最高，目前有`youdao baidu offline`
-
-未完待续
-
-## ⭐效果图
-
-<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图1.jpg" width="300" height="300">
-<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图2.jpg" width="300" height="300">
-<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图3.jpg" width="300" height="300">
-<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图4.PNG" width="300" height="300">
+|          配置项           | 类型  | 默认值 |                示例                 | 说明              | API定价                                           |
+| :-----------------------: | :---: | :----: | :---------------------------------: | :---------------- | :------------------------------------------------ |
+|        有道翻译API        |   -   |   -    |                  -                  | -                 | 梯度收费，0<月调用量<100w时,0.04元/张                   |
+|      youdao_app_key       |  str  |   ""   |       youdao_app_key="xxxxx"        | 应用ID            |                                                   |
+|     youdao_app_secret     |  str  |   ""   |     youdao_app_secret="xxxxxx"      | 应用秘钥          |                                                   |
+|        百度翻译API        |   -   |   -    |                  -                  | -                 | 每月1万次免费调用量，之后按梯度收费,最高0.04元/次 |
+|       baidu_app_id        |  str  |   ""   |        baidu_app_id="66666"         | APP ID            |                                                   |
+|       baidu_app_key       |  str  |   ""   |       baidu_app_key="xxxxxx"        | 密钥              |                                                   |
+|        火山翻译API        |   -   |   -    |                  -                  | -                 | 每月前100张免费，之后0.04元/张                    |
+|   huoshan_access_key_id   |  str  |   ""   |    huoshan_access_key_id="AK***"    | Access Key ID     |                                                   |
+| huoshan_secret_access_key |  str  |   ""   |  huoshan_secret_access_key="UT**"   | Secret Access Key |                                                   |
+|        离线翻译API        |   -   |   -    |                  -                  | -                 |                                            可能是电费?       |
+|        offline_url        |  str  |   ""   | offline_url="http://127.0.0.1:5003" | 见下方说明        |                                                   |
+|    其他翻译API(待更新)    |   -   |   -    |                  -                  | -                 |                                                   |
 
 ## 🔑API获取
 
@@ -101,6 +65,15 @@
 </details>
 
 <details>
+<summary>火山翻译</summary>
+
+   1. 根据火山引擎的[文档](https://www.volcengine.com/docs/4640/130872)，按流程注册
+   2. 创建好服务后获取到密钥，分别为`Access Key ID`和`Secret Access Key`，然后点击`Secret Access Key`下的按钮显示出密钥
+   3. 分别根据上面的配置说明填入.env.*文件
+
+</details>
+
+<details>
 <summary>离线翻译</summary>
 (该方案对设备配置要求较高，建议在有足够的硬盘空间、内存、显存，或有一台能为bot处理请求的服务器时考虑使用该方案)
 
@@ -119,11 +92,55 @@
 
 </details>
 
+## 🎉命令
+
+1. 图片翻译 [图片]：单张图片翻译，也可以先发送/图片翻译再发送图片,可以如下组合
+
+    1. 文字+图片
+    2. 先文字，后图片
+    3. 文字回复图片
+
+2. 多图片翻译 [图片]：n张图片翻译，将会以合并转发消息的形式发出,可以如下组合
+
+    1. 先文字，后多张图片 
+    2. 文字+图片*n
+3. 切换翻译api [api]: 将该api优先级提到最高，目前有`youdao baidu huoshan offline`
+
+未完待续
+
+## ⭐效果图
+
+<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图1.jpg" width="300" height="300">
+<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图2.jpg" width="300" height="300">
+<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图3.jpg" width="300" height="300">
+<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图4.PNG" width="300" height="300">
+
+## 🌙更新日志
+
+<details>
+<summary>点击展开</summary>
+
+- 2023-05-03:
+
+  - 更新说明文档
+  - 适配[火山翻译api](https://translate.volcengine.com/api),你可以选择接入火山翻译提供的API
+
+- 2023-05-01:
+
+  - 添加切换api的功能，你可以将某个api优先级设为最高
+  - 适配离线翻译api[manga-image-translator](https://github.com/zyddnys/manga-image-translator),现在你可以体验本地的翻译
+
+- 2023-04-28:
+
+  - 插件发布
+
+</details>
+
 ## 🐦计划
 
-- [x] 支持部署离线翻译模型
+- [x] 适配离线翻译模型[manga-image-translator](https://github.com/zyddnys/manga-image-translator)
 
-- [ ] 支持更多API
+- [x] 支持更多API
 
 - [ ] 完善插件
 
