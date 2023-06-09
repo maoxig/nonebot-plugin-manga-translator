@@ -5,7 +5,7 @@ from nonebot.typing import T_State
 from nonebot.matcher import Matcher
 from nonebot import on_command,logger,get_driver
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent,helpers,MessageSegment,Message,GroupMessageEvent
-from .utils import MangaTranslator 
+from .utils import MangaTranslator,Config
 
 __plugin_meta__ = PluginMetadata(
     name="图片翻译",
@@ -15,6 +15,11 @@ __plugin_meta__ = PluginMetadata(
         多图片翻译 [图片]*n --翻译并返回多张翻译后的图片
         切换翻译api [api] --将该api的优先级设为最高
 """,
+    type="application",
+    homepage="https://github.com/maoxig/nonebot-plugin-manga-translator",
+    config=Config,
+    supported_adapters={"~onebot.v11"},
+    
 )
 
 pictrans= on_command("图片翻译", priority=5, block=False,aliases={"翻译图片"})

@@ -6,9 +6,21 @@
 # nonebot-plugin-manga-translator
 
 ✨*基于Nonebot2的图片/漫画翻译插件*✨
-  
+
+<a href="https://github.com/nonebot/nonebot2">
+  <img src="https://img.shields.io/badge/nonebot-v2-red" alt="nonebot">
+</a> 
+<a href="./LICENSE">
+    <img src="https://img.shields.io/github/license/maoxig/nonebot-plugin-manga-translator" alt="license">
+</a>
+<a href="https://pypi.python.org/pypi/nonebot-plugin-manga-translator">
+    <img src="https://img.shields.io/pypi/v/nonebot-plugin-manga-translator" alt="pypi">
+</a>
+<img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="python">
+
+
 <div align="left">
-  
+
 ## 💿安装
 通过`pip`或`nb`安装；
 
@@ -30,7 +42,7 @@
 
 |          配置项           | 类型  | 默认值 |                示例                 | 说明              | API定价                                           |
 | :-----------------------: | :---: | :----: | :---------------------------------: | :---------------- | :------------------------------------------------ |
-|        有道翻译API        |   -   |   -    |                  -                  | -                 | 梯度收费，0<月调用量<100w时,0.04元/张                   |
+|        有道翻译API        |   -   |   -    |                  -                  | -                 | 新用户送一定额度,梯度收费，0<月调用量<100w时,0.04元/张                   |
 |      youdao_app_key       |  str  |   ""   |       youdao_app_key="xxxxx"        | 应用ID            |                                                   |
 |     youdao_app_secret     |  str  |   ""   |     youdao_app_secret="xxxxxx"      | 应用秘钥          |                                                   |
 |        百度翻译API        |   -   |   -    |                  -                  | -                 | 每月1万次免费调用量，之后按梯度收费,最高0.04元/次 |
@@ -81,7 +93,8 @@
    2. 安装好依赖后，在仓库目录下运行
 
       ```python
-      python -m manga_translator -v --mode web --use-cuda# the demo will be serving on http://127.0.0.1:5003
+      python -m manga_translator -v --mode web --use-cuda
+      # the demo will be serving on http://127.0.0.1:5003
       ```
 
    3. 如果你的设备没有成功安装cuda(要求pytorch的版本和cuda对应，不对应请重装)，请去掉参数`--use-cuda`，如果图片处理过程中爆显存，请改成`--use-cuda-limited`
@@ -119,6 +132,10 @@
 
 <details>
 <summary>点击展开</summary>
+
+- 2023-06-09:
+
+  - 更新插件元数据
 
 - 2023-05-03:
 

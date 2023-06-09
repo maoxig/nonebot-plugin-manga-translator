@@ -52,7 +52,7 @@ class MangaTranslator:
             try:
                 result=await api(imageUrl)
                 return result
-            except Exception as e:
+            except httpx.HTTPError as e:
                 logger.warning(f"API[{api.__name__}]不可用：{e}尝试切换下一个")
         return None,"无可用API"
    
@@ -97,7 +97,7 @@ class MangaTranslator:
     
 
     async def offline(self, imgUrl, timeout=60):
-        """离线翻译"""
+        """离线翻译,这里写的有点烂，求pr"""
         async with httpx.AsyncClient() as client:
             res = await client.get(imgUrl)
             img_content = res.content
@@ -128,7 +128,7 @@ class MangaTranslator:
 
 
     async def huoshan(self,imageUrl):
-        """火山引擎翻译，90%在构建签名"""
+        """火山引擎翻译，构建签名"""
         async with httpx.AsyncClient() as client:
             res=await client.get(imageUrl)
             data=json.dumps({"Image":str(base64.b64encode(res.content),encoding='utf-8'),'TargetLanguage': "zh"})
@@ -179,9 +179,11 @@ class MangaTranslator:
         hash_algorithm = md5()
         hash_algorithm.update(signStr.encode('utf-8'))
         return hash_algorithm.hexdigest()
+    
     @staticmethod
     def hash_sha256(content: str):
         return hashlib.sha256(content.encode("utf-8")).hexdigest()
+    
     @staticmethod
     def norm_query(params):
         query = ""
@@ -193,6 +195,7 @@ class MangaTranslator:
                 query = (query + quote(key, safe="-_.~") + "=" + quote(params[key], safe="-_.~") + "&")
         query = query[:-1]
         return query.replace("+", "%20")
+    
     @staticmethod
     def hmac_sha256(key: bytes, content: str):
         return hmac.new(key, content.encode("utf-8"), hashlib.sha256).digest()
