@@ -28,32 +28,46 @@
   在机器人目录下命令行使用
   `nb plugin install nonebot_plugin_manga_translator`
 - 使用pip(不推荐):
-  ~~不推荐就是不推荐，略略略~~
+  `pip install nonebot_plugin_manga_translator`
+  之后在机器人`pyproject.toml`里的`plugins = []`列表追加`"nonebot_plugin_manga_translator"`
 
 ## 📖简介
 
 1. 适配多种api,将收到的图片翻译并发送翻译后的图片，支持批量操作
 
-2. ⚙️插件配置
+2. 本插件0.3.0版本开始基于[nonebot-plugin-alconna](https://github.com/nonebot/plugin-alconna/tree/master)插件，适配了多平台（不一定稳定，欢迎提issue或pr），之前的版本只支持onebot.v11适配器
 
+## ⚙️插件配置
+
+### 配置驱动器​
+
+为了适配多平台，从0.3.0以及之后的版本插件需要“客户端型驱动器”（如 httpx）来下载图片等，驱动器安装和配置参考 [NoneBot 选择驱动器](https://nonebot.dev/docs/advanced/driver)
+
+同时需要在 `.env.*` 配置文件中启用对应的驱动器，例如：
+
+```
+DRIVER=~fastapi+~httpx
+```
+
+### 获取API
 请在机器人目录下的.env.*里填写以下选项(至少填一个平台的)，获取方式已整理好，见下方
 
 ~~个人感觉就漫画翻译而言,这几家API的效果大致为有道>=百度≈离线>=火山,且火山翻译对竖版日文的翻译效果很差~~
 
-|          配置项           | 类型  | 默认值 |                示例                 | 说明              | API定价                                           |
-| :-----------------------: | :---: | :----: | :---------------------------------: | :---------------- | :------------------------------------------------ |
-|        有道翻译API        |   -   |   -    |                  -                  | -                 | 新用户送一定额度,梯度收费，0<月调用量<100w时,0.04元/张                   |
-|      youdao_app_key       |  str  |   ""   |       youdao_app_key="xxxxx"        | 应用ID            |                                                   |
-|     youdao_app_secret     |  str  |   ""   |     youdao_app_secret="xxxxxx"      | 应用秘钥          |                                                   |
-|        百度翻译API        |   -   |   -    |                  -                  | -                 | 每月1万次免费调用量，之后按梯度收费,最高0.04元/次 |
-|       baidu_app_id        |  str  |   ""   |        baidu_app_id="66666"         | APP ID            |                                                   |
-|       baidu_app_key       |  str  |   ""   |       baidu_app_key="xxxxxx"        | 密钥              |                                                   |
-|        火山翻译API        |   -   |   -    |                  -                  | -                 | 每月前100张免费，之后0.04元/张                    |
-|   huoshan_access_key_id   |  str  |   ""   |    huoshan_access_key_id="AK***"    | Access Key ID     |                                                   |
-| huoshan_secret_access_key |  str  |   ""   |  huoshan_secret_access_key="UT**"   | Secret Access Key |                                                   |
-|        离线翻译API        |   -   |   -    |                  -                  | -                 |                                            可能是电费?       |
-|        offline_url        |  str  |   ""   | offline_url="http://127.0.0.1:5003" | 见下方说明        |                                                   |
-|    其他翻译API(待更新)    |   -   |   -    |                  -                  | -                 |                                                   |
+|          配置项           | 类型  | 默认值 |                示例                 | 说明              | API定价                                                |
+| :-----------------------: | :---: | :----: | :---------------------------------: | :---------------- | :----------------------------------------------------- |
+|        有道翻译API        |   -   |   -    |                  -                  | -                 | 新用户送一定额度,梯度收费，0<月调用量<100w时,0.04元/张 |
+|      youdao_app_key       |  str  |   ""   |       youdao_app_key="xxxxx"        | 应用ID            |                                                        |
+|     youdao_app_secret     |  str  |   ""   |     youdao_app_secret="xxxxxx"      | 应用秘钥          |                                                        |
+|        百度翻译API        |   -   |   -    |                  -                  | -                 | 每月1万次免费调用量，之后按梯度收费,最高0.04元/次      |
+|       baidu_app_id        |  str  |   ""   |        baidu_app_id="66666"         | APP ID            |                                                        |
+|       baidu_app_key       |  str  |   ""   |       baidu_app_key="xxxxxx"        | 密钥              |                                                        |
+|        火山翻译API        |   -   |   -    |                  -                  | -                 | 每月前100张免费，之后0.04元/张                         |
+|   huoshan_access_key_id   |  str  |   ""   |    huoshan_access_key_id="AK***"    | Access Key ID     |                                                        |
+| huoshan_secret_access_key |  str  |   ""   |  huoshan_secret_access_key="UT**"   | Secret Access Key |                                                        |
+|        离线翻译API        |   -   |   -    |                  -                  | -                 | 可能是电费?                                            |
+|        offline_url        |  str  |   ""   | offline_url="http://127.0.0.1:5003" | 见下方说明        |                                                        |
+|    其他翻译API(待更新)    |   -   |   -    |                  -                  | -                 |                                                        |
 
 ## 🔑API获取
 
@@ -113,7 +127,7 @@
     2. 先文字，后图片
     3. 文字回复图片
 
-2. 多图片翻译 [图片]：n张图片翻译，将会以合并转发消息的形式发出,可以如下组合
+2. 多图片翻译 [图片]：n张图片翻译，将会以合并转发消息（如果平台支持，否则则一张一张发出）的形式发出,可以如下组合
 
     1. 先文字，后多张图片 
     2. 文字+图片*n
@@ -132,6 +146,10 @@
 
 <details>
 <summary>点击展开</summary>
+
+- 2024-04-23:
+
+  - 更新版本，这个版本起开始基于[nonebot-plugin-alconna](https://github.com/nonebot/plugin-alconna/tree/master)插件支持多适配器多平台(可能有bug)，同时更新nonebot2依赖至2.2.0以上
 
 - 2023-06-09:
 
@@ -159,6 +177,11 @@
 
 - [x] 支持更多API
 
+- [x] 多平台适配
+
+- [ ] 支持指定源语言和目标语言
+
 - [ ] 完善插件
+
 
 ## ✨喜欢的话就点个star✨吧，球球了QAQ
