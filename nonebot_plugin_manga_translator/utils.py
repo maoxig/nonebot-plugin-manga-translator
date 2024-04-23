@@ -258,7 +258,7 @@ class MangaTranslator:
     def norm_query(params):
         query = ""
         for key in sorted(params.keys()):
-            if type(params[key]) == list:
+            if isinstance(params[key], list):
                 for k in params[key]:
                     query = (
                         query

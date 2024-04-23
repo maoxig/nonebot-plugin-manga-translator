@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD033 -->
 <p align="center">
   <a href="https://v2.nonebot.dev/"><img src="https://v2.nonebot.dev/logo.png" width="200" height="200" alt="nonebot"></a>
 </p>
@@ -9,7 +10,7 @@
 
 <a href="https://github.com/nonebot/nonebot2">
   <img src="https://img.shields.io/badge/nonebot-v2-red" alt="nonebot">
-</a> 
+</a>
 <a href="./LICENSE">
     <img src="https://img.shields.io/github/license/maoxig/nonebot-plugin-manga-translator" alt="license">
 </a>
@@ -18,10 +19,10 @@
 </a>
 <img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="python">
 
-
 <div align="left">
 
 ## 💿安装
+
 通过`pip`或`nb`安装；
 
 - 使用nb:
@@ -50,24 +51,25 @@ DRIVER=~fastapi+~httpx
 ```
 
 ### 获取API
+
 请在机器人目录下的.env.*里填写以下选项(至少填一个平台的)，获取方式已整理好，见下方
 
 ~~个人感觉就漫画翻译而言,这几家API的效果大致为有道>=百度≈离线>=火山,且火山翻译对竖版日文的翻译效果很差~~
 
-|          配置项           | 类型  | 默认值 |                示例                 | 说明              | API定价                                                |
-| :-----------------------: | :---: | :----: | :---------------------------------: | :---------------- | :----------------------------------------------------- |
-|        有道翻译API        |   -   |   -    |                  -                  | -                 | 新用户送一定额度,梯度收费，0<月调用量<100w时,0.04元/张 |
-|      youdao_app_key       |  str  |   ""   |       youdao_app_key="xxxxx"        | 应用ID            |                                                        |
-|     youdao_app_secret     |  str  |   ""   |     youdao_app_secret="xxxxxx"      | 应用秘钥          |                                                        |
-|        百度翻译API        |   -   |   -    |                  -                  | -                 | 每月1万次免费调用量，之后按梯度收费,最高0.04元/次      |
-|       baidu_app_id        |  str  |   ""   |        baidu_app_id="66666"         | APP ID            |                                                        |
-|       baidu_app_key       |  str  |   ""   |       baidu_app_key="xxxxxx"        | 密钥              |                                                        |
-|        火山翻译API        |   -   |   -    |                  -                  | -                 | 每月前100张免费，之后0.04元/张                         |
-|   huoshan_access_key_id   |  str  |   ""   |    huoshan_access_key_id="AK***"    | Access Key ID     |                                                        |
-| huoshan_secret_access_key |  str  |   ""   |  huoshan_secret_access_key="UT**"   | Secret Access Key |                                                        |
-|        离线翻译API        |   -   |   -    |                  -                  | -                 | 可能是电费?                                            |
-|        offline_url        |  str  |   ""   | offline_url="http://127.0.0.1:5003" | 见下方说明        |                                                        |
-|    其他翻译API(待更新)    |   -   |   -    |                  -                  | -                 |                                                        |
+|          配置项           | 类型  | 默认值 |                 示例                  | 说明              | API定价                                                |
+| :-----------------------: | :---: | :----: | :-----------------------------------: | :---------------- | :----------------------------------------------------- |
+|        有道翻译API        |   -   |   -    |                   -                   | -                 | 新用户送一定额度,梯度收费，0<月调用量<100w时,0.04元/张 |
+|      youdao_app_key       |  str  |   ""   |        youdao_app_key="xxxxx"         | 应用ID            |                                                        |
+|     youdao_app_secret     |  str  |   ""   |      youdao_app_secret="xxxxxx"       | 应用秘钥          |                                                        |
+|        百度翻译API        |   -   |   -    |                   -                   | -                 | 每月1万次免费调用量，之后按梯度收费,最高0.04元/次      |
+|       baidu_app_id        |  str  |   ""   |         baidu_app_id="66666"          | APP ID            |                                                        |
+|       baidu_app_key       |  str  |   ""   |        baidu_app_key="xxxxxx"         | 密钥              |                                                        |
+|        火山翻译API        |   -   |   -    |                   -                   | -                 | 每月前100张免费，之后0.04元/张                         |
+|   huoshan_access_key_id   |  str  |   ""   |     huoshan_access_key_id="AK***"     | Access Key ID     |                                                        |
+| huoshan_secret_access_key |  str  |   ""   |   huoshan_secret_access_key="UT**"    | Secret Access Key |                                                        |
+|        离线翻译API        |   -   |   -    |                   -                   | -                 | 可能是电费?                                            |
+|        offline_url        |  str  |   ""   | offline_url="<http://127.0.0.1:5003>" | 见下方说明        |                                                        |
+|    其他翻译API(待更新)    |   -   |   -    |                   -                   | -                 |                                                        |
 
 ## 🔑API获取
 
@@ -129,7 +131,7 @@ DRIVER=~fastapi+~httpx
 
 2. 多图片翻译 [图片]：n张图片翻译，将会以合并转发消息（如果平台支持，否则则一张一张发出）的形式发出,可以如下组合
 
-    1. 先文字，后多张图片 
+    1. 先文字，后多张图片
     2. 文字+图片*n
 3. 切换翻译api [api]: 将该api优先级提到最高，目前有`youdao baidu huoshan offline`
 
@@ -137,10 +139,10 @@ DRIVER=~fastapi+~httpx
 
 ## ⭐效果图
 
-<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图1.jpg" width="300" height="300">
-<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图2.jpg" width="300" height="300">
-<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图3.jpg" width="300" height="300">
-<img src="https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图4.PNG" width="300" height="300">
+![效果图1](https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图1.jpg)
+![效果图2](https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图2.jpg)
+![效果图3](https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图3.jpg)
+![效果图4](https://github.com/maoxig/nonebot-plugin-manga-translator/blob/main/resource/效果图4.PNG)
 
 ## 🌙更新日志
 
@@ -182,6 +184,5 @@ DRIVER=~fastapi+~httpx
 - [ ] 支持指定源语言和目标语言
 
 - [ ] 完善插件
-
 
 ## ✨喜欢的话就点个star✨吧，球球了QAQ

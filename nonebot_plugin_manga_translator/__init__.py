@@ -9,10 +9,11 @@ from datetime import datetime
 from typing import List
 
 require("nonebot_plugin_alconna")
+
 from nonebot_plugin_alconna import CustomNode, Image, Reference, UniMessage
 from nonebot_plugin_alconna.uniseg.tools import image_fetch, reply_fetch
 from nonebot_plugin_alconna.uniseg import UniMsg, Reply
-from .utils import MangaTranslator,BytesIO
+from .utils import MangaTranslator, BytesIO
 from .config import Config
 
 
