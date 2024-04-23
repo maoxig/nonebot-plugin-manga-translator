@@ -35,13 +35,13 @@
 
 1. 适配多种api,将收到的图片翻译并发送翻译后的图片，支持批量操作
 
-2. 本插件0.3.0版本开始基于[nonebot-plugin-alconna](https://github.com/nonebot/plugin-alconna/tree/master)插件，适配了多平台（不一定稳定，欢迎提issue或pr），之前的版本只支持onebot.v11适配器
+2. 本插件0.2.0版本开始基于[nonebot-plugin-alconna](https://github.com/nonebot/plugin-alconna/tree/master)插件，适配了多平台（不一定稳定，欢迎提issue或pr），之前的版本只支持onebot.v11适配器
 
 ## ⚙️插件配置
 
 ### 配置驱动器​
 
-为了适配多平台，从0.3.0以及之后的版本插件需要“客户端型驱动器”（如 httpx）来下载图片等，驱动器安装和配置参考 [NoneBot 选择驱动器](https://nonebot.dev/docs/advanced/driver)
+为了适配多平台，从0.2.0以及之后的版本插件需要“客户端型驱动器”（如 httpx）来下载图片等，驱动器安装和配置参考 [NoneBot 选择驱动器](https://nonebot.dev/docs/advanced/driver)
 
 同时需要在 `.env.*` 配置文件中启用对应的驱动器，例如：
 
