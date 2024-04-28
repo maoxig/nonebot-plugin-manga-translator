@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-manga-translator"
-version = "0.2.0"
+version = "0.2.1"
 description = "基于nonebot2的适配多种api的图片/漫画翻译插件"
 authors = ["xenophon <674550338@qq.com>"]
 license = "MIT"
