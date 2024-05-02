@@ -110,12 +110,12 @@ DRIVER=~fastapi+~httpx
 
       ```python
       python -m manga_translator -v --mode web --use-cuda
-      # the demo will be serving on http://127.0.0.1:5003
+      # the demo will be serving on http://127.0.0.1:5003，此时会提供一个网页，可以点击打开
       ```
 
    3. 如果你的设备没有成功安装cuda(要求pytorch的版本和cuda对应，不对应请重装)，请去掉参数`--use-cuda`，如果图片处理过程中爆显存，请改成`--use-cuda-limited`
 
-   4. 你可以访问控制台给出的网址，尝试先本地翻译一张图片，此时会根据选项下载需要的模型(为防止下载失败，也可以提前手动下载)
+   4. 你可以访问控制台给出的网址，**尝试先本地翻译一张图片**，此时会根据选项下载需要的模型(为防止下载失败，也可以提前手动下载)
    5. 如果bot和翻译器在同一台设备，那么.env填写`offline_url="http://127.0.0.1:5003"`即可，如果不在同一台设备，你**可能**还需要放行防火墙、端口转发等，并且填写内容也会有所变化
    6. 最后你**可能**还需要修改一下本插件的代码，找到本插件`utils.py`的`offline`函数，根据注释和[文档](https://github.com/zyddnys/manga-image-translator/blob/main/README.md),修改字典`data`，从而指定你想要的OCR模型和翻译模型(目前是用了offline模型,你可以改成别的)
 

@@ -1,6 +1,6 @@
-from pydantic import BaseModel,Extra
+from pydantic import BaseModel
 
-class Config(BaseModel,extra=Extra.ignore):
+class Config(BaseModel):
     #百度
     baidu_app_id:str=""
     baidu_app_key:str=""

@@ -13,11 +13,11 @@ import datetime
 import hashlib
 import hmac
 from urllib.parse import quote
-
-
+from typing import Tuple, Union
+from .config import Config
 class MangaTranslator:
 
-    def __init__(self, Config) -> None:
+    def __init__(self, Config:Config) -> None:
         self.config = Config
         self.img_url = []
         self.api = []
@@ -34,7 +34,7 @@ class MangaTranslator:
             self.api.append(self.huoshan)
             logger.info("检测到火山API")
 
-    async def call_api(self, image_bytes):
+    async def call_api(self, image_bytes:bytes)->Tuple[Union[None,bytes],str]:
         for api in self.api:
             try:
                 result = await api(image_bytes)
@@ -43,7 +43,7 @@ class MangaTranslator:
                 logger.warning(f"API[{api.__name__}]不可用：{e}尝试切换下一个")
         return None, "无可用API"
 
-    async def youdao(self, image_bytes):
+    async def youdao(self, image_bytes) -> Tuple[bytes, str]:
         """有道翻译"""
         salt = str(uuid.uuid1())
         data = {
@@ -72,7 +72,7 @@ class MangaTranslator:
             pic = base64.b64decode(img_base64)
         return pic, "有道"
 
-    async def baidu(self, image_bytes):
+    async def baidu(self, image_bytes:bytes)->Tuple[bytes,str]:
         """百度翻译"""
         async with httpx.AsyncClient() as client:
             salt = random.randint(32768, 65536)
@@ -112,7 +112,7 @@ class MangaTranslator:
             pic = base64.b64decode(img_base64)
         return pic, "百度"
 
-    async def offline(self, image_bytes, timeout=60):
+    async def offline(self, image_bytes:bytes, timeout=60)->Tuple[Union[None,bytes],str]:
         """离线翻译,这里写的有点烂，求pr"""
         async with httpx.AsyncClient() as client:
             img_content = image_bytes
@@ -127,29 +127,32 @@ class MangaTranslator:
             task_id = response.json()["task_id"]
             req = {"taskid": task_id}
             # 轮询获取翻译结果，超时时间为60s
-            start_time = time.monotonic()
-            while True:
-                response = await client.get(
-                    self.config.offline_url + "/task-state", params=req
-                )
-                logger.debug(response.content)
-                response.raise_for_status()
-                state = response.json()["state"]
-                finished = response.json()["finished"]
-                if state == "finished" or finished:
-                    break
-                if time.monotonic() - start_time > timeout:
-                    return None, "超时"
-                await asyncio.sleep(1)
-            img_data = await client.get(
-                url=self.config.offline_url + "/result/" + task_id
-            )
-            if img_data.status_code == 200 and img_data.content:
-                return img_data.content, "离线"
-            else:
-                return None, "离线"
+            async def check_translation_result() -> Tuple[Union[None, bytes], str]:
+                start_time = time.monotonic()
+                while True:
+                    response = await client.get(
+                        self.config.offline_url + "/task-state", params=req
+                    )
+                    response.raise_for_status()
+                    state = response.json()["state"]
+                    finished = response.json()["finished"]
+                    if state == "finished" or finished:
+                        break
+                    if time.monotonic() - start_time > timeout:
+                        return None, "超时"
+                    await asyncio.sleep(1)
 
-    async def huoshan(self, image_bytes):
+                img_data = await client.get(
+                    url=self.config.offline_url + "/result/" + task_id
+                )
+                if img_data.status_code == 200 and img_data.content:
+                    return img_data.content, "离线"
+                else:
+                    return None, "离线"
+
+            return await check_translation_result()
+
+    async def huoshan(self, image_bytes:bytes)->Tuple[bytes,str]:
         """火山引擎翻译，构建签名"""
         async with httpx.AsyncClient() as client:
             data = json.dumps(
@@ -227,22 +230,20 @@ class MangaTranslator:
                 url="https://open.volcengineapi.com/",
                 headers=sign_result,
                 params=params,
-                data=data,
+                data=data, # type: ignore
             )
             img_base64 = huoshan_res.json()["Image"]
             pic = base64.b64decode(img_base64)
         return pic, "火山"
 
     @staticmethod
-    def compress_image(image_data):
-        with BytesIO(image_data) as input:
-            image = Image.open(input)
-            image = image.convert("RGB")
-            image = image.resize(
-                (int(image.width * 0.5), int(image.height * 0.5)), Image.ANTIALIAS
-            )
-            image.save(input, format="JPEG", quality=80)
-            return input.getvalue()
+    def compress_image(image_data: bytes) -> bytes:
+        with BytesIO(image_data) as input_buffer:
+            with Image.open(input_buffer) as image:
+                # image = image.resize((int(image.width * 0.5), int(image.height * 0.5)))
+                output_buffer = BytesIO()
+                image.save(output_buffer, format="JPEG", optimize=True, quality=80)
+                return output_buffer.getvalue()
 
     @staticmethod
     def encrypt(signStr):
@@ -281,3 +282,19 @@ class MangaTranslator:
     @staticmethod
     def hmac_sha256(key: bytes, content: str):
         return hmac.new(key, content.encode("utf-8"), hashlib.sha256).digest()
+
+
+if __name__=="__main__":
+    def generate_large_white_image():
+        width = 4000
+        height = 4000
+        image = Image.new("RGB", (width, height), (255, 255, 255))
+        output_buffer = BytesIO()
+        image.save(output_buffer, format="JPEG")
+        return output_buffer.getvalue()
+
+    image_data = generate_large_white_image()
+    print("原始图像大小:", len(image_data))
+
+    compressed_data = MangaTranslator.compress_image(image_data)
+    print("压缩后图像大小:", len(compressed_data))
