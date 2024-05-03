@@ -1,5 +1,5 @@
 from nonebot.exception import MatcherException
-from nonebot.params import CommandArg, Arg, ArgPlainText
+from nonebot.params import CommandArg, ArgPlainText
 from nonebot.plugin import PluginMetadata, inherit_supported_adapters
 from nonebot.typing import T_State
 from nonebot.matcher import Matcher
@@ -13,7 +13,7 @@ require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import CustomNode, Image, Reference, UniMessage
 from nonebot_plugin_alconna.uniseg.tools import image_fetch, reply_fetch
 from nonebot_plugin_alconna.uniseg import UniMsg, Reply
-from .utils import MangaTranslator, BytesIO
+from .utils import MangaTranslator
 from .config import Config
 
 
@@ -74,11 +74,10 @@ async def _(
     if msg.has(Reply):
         if (reply := await reply_fetch(event, bot)) and reply.msg:
             reply_msg = reply.msg
-            uni_msg_with_reply = UniMessage.generate_without_reply(message=reply_msg)
+            uni_msg_with_reply = UniMessage.generate_without_reply(message=reply_msg) # type: ignore
         msg.extend(uni_msg_with_reply)
-
     if img_list := await extract_images(bot=bot, event=event, state=state, msg=msg):
-        matcher.set_arg("img_list", img_list)
+        state["img_list"]=img_list
 
 
 @pictrans.got("img_list", prompt="请发送要翻译的图片")
@@ -87,9 +86,9 @@ async def handle_event(
     msg: UniMsg,
     event: Event,
     state: T_State,
-    img_list: list = Arg(),
 ):
     try:
+        img_list = state["img_list"]
         img_url_list = await extract_images(bot=bot, event=event, state=state, msg=msg)
         if not img_url_list:
             img_url_list = img_list
@@ -112,12 +111,12 @@ async def _(
     matcher: Matcher,
 ):
     if img_list := await extract_images(bot=bot, event=event, state=state, msg=msg):
-        matcher.set_arg("img_list", img_list)
+        state["img_list"] = img_list
 
 
 @mul_pictrans.got("img_list", prompt="请发送要翻译的图片，发送/退出以退出多图片模式")
 async def _(
-    bot: Bot, msg: UniMsg, event: Event, state: T_State, img_list: list = Arg()
+    bot: Bot, msg: UniMsg, event: Event, state: T_State
 ):
 
     if new_list := await extract_images(bot=bot, event=event, state=state, msg=msg):
@@ -133,7 +132,7 @@ async def _(
     try:
         await send_forward_msg(bot, event, imgs)
     except Exception as e:
-        logger.warning("无法发送合并消息")
+        logger.warning(f"无法发送合并消息：{e}")
         for img in imgs:
             await UniMessage.image(raw=img).send()
     manga_trans.img_url.clear()
@@ -141,7 +140,7 @@ async def _(
 
 async def extract_images(
     bot: Bot, event: Event, state: T_State, msg: UniMsg
-) -> List[BytesIO]:
+) -> List[bytes]:
     imgs = []
     for msg_seg in msg:
         if isinstance(msg_seg, Image):
@@ -155,7 +154,7 @@ async def extract_images(
 async def send_forward_msg(
     bot: Bot,
     event: Event,
-    images: List[BytesIO],
+    images: List[bytes],
 ):
     try:
         from nonebot.adapters.onebot.v11 import Bot as V11Bot
@@ -202,11 +201,9 @@ async def send_forward_msg(
     uid = bot.self_id
     name = "翻译姬"
     time = datetime.now()
-    await UniMessage(
-        Reference(
-            content=[
-                CustomNode(uid, name, time, await UniMessage.image(raw=img).export())
-                for img in images
-            ]
-        )
-    ).send()
+    forward_msg = Reference()
+    forward_msg._children = [
+        CustomNode(uid, name, time, await UniMessage.image(raw=img).export())
+        for img in images
+    ]
+    await UniMessage(forward_msg).send()
