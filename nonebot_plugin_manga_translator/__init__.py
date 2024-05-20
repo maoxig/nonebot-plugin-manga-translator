@@ -74,13 +74,13 @@ async def _(
     if msg.has(Reply):
         if (reply := await reply_fetch(event, bot)) and reply.msg:
             reply_msg = reply.msg
-            uni_msg_with_reply = UniMessage.generate_without_reply(message=reply_msg) # type: ignore
+            uni_msg_with_reply = UniMessage.generate_without_reply(message=reply_msg)  # type: ignore
         msg.extend(uni_msg_with_reply)
     if img_list := await extract_images(bot=bot, event=event, state=state, msg=msg):
-        state["img_list"]=img_list
+        state["img_list"] = img_list
 
 
-@pictrans.got("img_list", prompt="请发送要翻译的图片")
+@pictrans.got("img_list", prompt="请发送要翻译的图片，图片较多可使用指令/多图片翻译")
 async def handle_event(
     bot: Bot,
     msg: UniMsg,
@@ -115,9 +115,7 @@ async def _(
 
 
 @mul_pictrans.got("img_list", prompt="请发送要翻译的图片，发送/退出以退出多图片模式")
-async def _(
-    bot: Bot, msg: UniMsg, event: Event, state: T_State
-):
+async def _(bot: Bot, msg: UniMsg, event: Event, state: T_State):
 
     if new_list := await extract_images(bot=bot, event=event, state=state, msg=msg):
         manga_trans.img_url.extend(new_list)

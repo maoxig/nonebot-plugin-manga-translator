@@ -151,6 +151,10 @@ DRIVER=~fastapi+~httpx
 
 - 2024-04-23:
 
+  - 更新PIL版本，修复压缩png图片时失败
+
+- 2024-04-23:
+
   - 更新版本，这个版本起开始基于[nonebot-plugin-alconna](https://github.com/nonebot/plugin-alconna/tree/master)插件支持多适配器多平台(可能有bug)，同时更新nonebot2依赖至2.2.0以上
 
 - 2023-06-09:
@@ -180,6 +184,8 @@ DRIVER=~fastapi+~httpx
 - [x] 支持更多API
 
 - [x] 多平台适配
+
+- [ ] 优化代码
 
 - [ ] 支持指定源语言和目标语言
 

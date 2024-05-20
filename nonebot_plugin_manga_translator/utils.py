@@ -34,7 +34,7 @@ class MangaTranslator:
             self.api.append(self.huoshan)
             logger.info("检测到火山API")
 
-    async def call_api(self, image_bytes:bytes)->Tuple[Union[None,bytes],str]:
+    async def call_api(self, image_bytes: bytes) -> Tuple[Union[None, bytes], str]:
         for api in self.api:
             try:
                 result = await api(image_bytes)
@@ -72,7 +72,7 @@ class MangaTranslator:
             pic = base64.b64decode(img_base64)
         return pic, "有道"
 
-    async def baidu(self, image_bytes:bytes)->Tuple[bytes,str]:
+    async def baidu(self, image_bytes: bytes) -> Tuple[bytes, str]:
         """百度翻译"""
         async with httpx.AsyncClient() as client:
             salt = random.randint(32768, 65536)
@@ -112,7 +112,9 @@ class MangaTranslator:
             pic = base64.b64decode(img_base64)
         return pic, "百度"
 
-    async def offline(self, image_bytes:bytes, timeout=60)->Tuple[Union[None,bytes],str]:
+    async def offline(
+        self, image_bytes: bytes, timeout=60
+    ) -> Tuple[Union[None, bytes], str]:
         """离线翻译,这里写的有点烂，求pr"""
         async with httpx.AsyncClient() as client:
             img_content = image_bytes
@@ -126,6 +128,7 @@ class MangaTranslator:
             response.raise_for_status()  # 检查响应状态
             task_id = response.json()["task_id"]
             req = {"taskid": task_id}
+
             # 轮询获取翻译结果，超时时间为60s
             async def check_translation_result() -> Tuple[Union[None, bytes], str]:
                 start_time = time.monotonic()
@@ -152,7 +155,7 @@ class MangaTranslator:
 
             return await check_translation_result()
 
-    async def huoshan(self, image_bytes:bytes)->Tuple[bytes,str]:
+    async def huoshan(self, image_bytes: bytes) -> Tuple[bytes, str]:
         """火山引擎翻译，构建签名"""
         async with httpx.AsyncClient() as client:
             data = json.dumps(
@@ -162,7 +165,7 @@ class MangaTranslator:
                 }
             )
             x_content_sha256 = self.hash_sha256(data)
-            now_time = datetime.datetime.utcnow()  #
+            now_time = datetime.datetime.now()  #
             x_date = now_time.strftime("%Y%m%dT%H%M%SZ")
             credential_scope = "/".join(
                 [x_date[:8], "cn-north-1", "translate", "request"]
@@ -230,7 +233,7 @@ class MangaTranslator:
                 url="https://open.volcengineapi.com/",
                 headers=sign_result,
                 params=params,
-                data=data, # type: ignore
+                data=data,  # type: ignore
             )
             img_base64 = huoshan_res.json()["Image"]
             pic = base64.b64decode(img_base64)
@@ -240,7 +243,9 @@ class MangaTranslator:
     def compress_image(image_data: bytes) -> bytes:
         with BytesIO(image_data) as input_buffer:
             with Image.open(input_buffer) as image:
-                # image = image.resize((int(image.width * 0.5), int(image.height * 0.5)))
+                if image.mode == "RGBA":
+                    image = image.convert("RGB")
+                image = image.resize((int(image.width * 0.5), int(image.height * 0.5)))
                 output_buffer = BytesIO()
                 image.save(output_buffer, format="JPEG", optimize=True, quality=80)
                 return output_buffer.getvalue()
@@ -284,17 +289,16 @@ class MangaTranslator:
         return hmac.new(key, content.encode("utf-8"), hashlib.sha256).digest()
 
 
-if __name__=="__main__":
-    def generate_large_white_image():
-        width = 4000
-        height = 4000
-        image = Image.new("RGB", (width, height), (255, 255, 255))
-        output_buffer = BytesIO()
-        image.save(output_buffer, format="JPEG")
-        return output_buffer.getvalue()
+if __name__ == "__main__":
 
-    image_data = generate_large_white_image()
-    print("原始图像大小:", len(image_data))
+    def test_compression(image_path):
+        try:
+            with open(image_path, "rb") as file:
+                image_data = file.read()
+            print("原始图像大小:", len(image_data))
 
-    compressed_data = MangaTranslator.compress_image(image_data)
-    print("压缩后图像大小:", len(compressed_data))
+            compressed_data = MangaTranslator.compress_image(image_data)
+            print("压缩后图像大小:", len(compressed_data))
+        except Exception as e:
+            print(str(e))
+
