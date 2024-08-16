@@ -15,9 +15,11 @@ import hmac
 from urllib.parse import quote
 from typing import Tuple, Union
 from .config import Config
+
+
 class MangaTranslator:
 
-    def __init__(self, Config:Config) -> None:
+    def __init__(self, Config: Config) -> None:
         self.config = Config
         self.img_url = []
         self.api = []
@@ -25,6 +27,7 @@ class MangaTranslator:
             self.api.append(self.youdao)
             logger.info("检测到有道API")
         if self.config.baidu_app_id:
+            self.config.baidu_app_id = str(self.config.baidu_app_id)  # 兼容int
             self.api.append(self.baidu)
             logger.info("检测到百度API")
         if self.config.offline_url:
@@ -301,4 +304,3 @@ if __name__ == "__main__":
             print("压缩后图像大小:", len(compressed_data))
         except Exception as e:
             print(str(e))
-

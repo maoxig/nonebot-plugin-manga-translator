@@ -149,6 +149,10 @@ DRIVER=~fastapi+~httpx
 <details>
 <summary>点击展开</summary>
 
+- 2024-08-17:
+
+  - 兼容pydantic V1
+
 - 2024-04-23:
 
   - 更新PIL版本，修复压缩png图片时失败
