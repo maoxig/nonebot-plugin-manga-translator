@@ -36,7 +36,7 @@
 
 1. 适配多种api,将收到的图片翻译并发送翻译后的图片，支持批量操作
 
-2. 本插件0.2.0版本开始基于[nonebot-plugin-alconna](https://github.com/nonebot/plugin-alconna/tree/master)插件，适配了多平台（不一定稳定，欢迎提issue或pr），之前的版本只支持onebot.v11适配器
+2. 本插件0.2.0版本开始基于[nonebot-plugin-alconna](https://github.com/nonebot/plugin-alconna/tree/master)插件，适配了多平台（不一定稳定，欢迎提issue或pr），之前的版本(<=0.1.3)支持onebot.v11适配器
 
 ## ⚙️插件配置
 
@@ -44,7 +44,15 @@
 
 为了适配多平台，从0.2.0以及之后的版本插件需要“客户端型驱动器”（如 httpx）来下载图片等，驱动器安装和配置参考 [NoneBot 选择驱动器](https://nonebot.dev/docs/advanced/driver)
 
-同时需要在 `.env.*` 配置文件中启用对应的驱动器，例如：
+~~我知道很少人会去看，所以你可以直接按照下面两步操作~~
+
+首先找到你的平台协议需要的驱动器，大部分情况下可以httpx，例如
+
+```
+nb driver install httpx
+```
+
+并且需要在 `.env.*` 配置文件中启用对应的驱动器，例如：
 
 ```
 DRIVER=~fastapi+~httpx
@@ -151,7 +159,7 @@ DRIVER=~fastapi+~httpx
 
 - 2024-08-17:
 
-  - 兼容pydantic V1
+  - 兼容pydantic V2
 
 - 2024-04-23:
 
