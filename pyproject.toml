@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-manga-translator"
-version = "0.2.3"
+version = "0.2.4"
 description = "基于nonebot2的适配多种api的图片/漫画翻译插件"
 authors = ["xenophon <674550338@qq.com>"]
 license = "MIT"
@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "nonebot_plugin_manga_translator"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 nonebot2 = "^2.2.0"
 Pillow = ">=10.0.0"
 httpx = ">=0.20.0,<1.0.0"

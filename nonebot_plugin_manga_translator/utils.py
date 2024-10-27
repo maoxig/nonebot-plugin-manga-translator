@@ -26,13 +26,17 @@ class MangaTranslator:
         if self.config.youdao_app_key:
             self.api.append(self.youdao)
             logger.info("检测到有道API")
+
         if self.config.baidu_app_id:
             self.config.baidu_app_id = str(self.config.baidu_app_id)  # 兼容int
             self.api.append(self.baidu)
             logger.info("检测到百度API")
+
         if self.config.offline_url:
             self.api.append(self.offline)
             logger.info("检测到离线模型")
+            logger.info(f"离线请求api_data: {str(self.config.offline_api_data)}")
+
         if self.config.huoshan_access_key_id:
             self.api.append(self.huoshan)
             logger.info("检测到火山API")
@@ -43,7 +47,9 @@ class MangaTranslator:
                 result = await api(image_bytes)
                 return result
             except httpx.HTTPError as e:
-                logger.warning(f"API[{api.__name__}]不可用：{e}尝试切换下一个")
+                logger.warning(f"API[{api}]不可用：{e} 尝试切换下一个")
+            except Exception as e:
+                logger.error(f"API[{api}]出现未知错误：{e} 尝试切换下一个")
         return None, "无可用API"
 
     async def youdao(self, image_bytes) -> Tuple[bytes, str]:
@@ -71,6 +77,9 @@ class MangaTranslator:
             youdao_res = await client.post(
                 url="https://openapi.youdao.com/ocrtransapi", data=data, headers=headers
             )
+            if "render_image" not in youdao_res.json():
+                logger.error(youdao_res.json())
+                raise ValueError("有道API返回错误: " + str(youdao_res.json()))
             img_base64 = youdao_res.json()["render_image"]
             pic = base64.b64decode(img_base64)
         return pic, "有道"
@@ -111,6 +120,9 @@ class MangaTranslator:
                 params=payload,
                 files=image,
             )
+            if "data" not in baidu_res.json():
+                logger.error(baidu_res.json())
+                raise ValueError("百度API返回错误: " + str(baidu_res.json()))
             img_base64 = baidu_res.json()["data"]["pasteImg"]
             pic = base64.b64decode(img_base64)
         return pic, "百度"
@@ -118,16 +130,18 @@ class MangaTranslator:
     async def offline(
         self, image_bytes: bytes, timeout=60
     ) -> Tuple[Union[None, bytes], str]:
-        """离线翻译,这里写的有点烂，求pr"""
+        """离线翻译"""
+        # 提交任务
         async with httpx.AsyncClient() as client:
+
             img_content = image_bytes
             form = {"file": ("image.png", img_content, "image/png")}
             response = await client.post(
                 self.config.offline_url + "/submit",
                 files=form,
-                data={"translator": "offline"},
+                data=self.config.offline_api_data,
             )  # 改为本地翻译器
-            # 这里的填写请参考文档，根据自己情况填写，例如data={"translator":"youdao","tgt_lang":"CHS"},如果是有道、百度、gpt等，请确保填写了key
+
             response.raise_for_status()  # 检查响应状态
             task_id = response.json()["task_id"]
             req = {"taskid": task_id}
@@ -154,7 +168,7 @@ class MangaTranslator:
                 if img_data.status_code == 200 and img_data.content:
                     return img_data.content, "离线"
                 else:
-                    return None, "离线"
+                    return None, "离线API出错"
 
             return await check_translation_result()
 
@@ -238,6 +252,9 @@ class MangaTranslator:
                 params=params,
                 data=data,  # type: ignore
             )
+            if "Image" not in huoshan_res.json():
+                logger.error(huoshan_res.json())
+                raise ValueError("火山API返回错误: " + str(huoshan_res.json()))
             img_base64 = huoshan_res.json()["Image"]
             pic = base64.b64decode(img_base64)
         return pic, "火山"

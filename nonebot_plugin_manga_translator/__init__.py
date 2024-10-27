@@ -93,8 +93,11 @@ async def handle_event(
         if not img_url_list:
             img_url_list = img_list
         result = await manga_trans.call_api(img_url_list[0])
-        await pictrans.send(message=f"翻译完成,当前api:{result[1]}")
-        await UniMessage.image(raw=result[0]).send()
+        if result[0] is None:
+            await pictrans.send(f"翻译失败:{result[1]},请检查控制台输出")
+        else:
+            await pictrans.send(message=f"翻译完成,当前api:{result[1]}")
+            await UniMessage.image(raw=result[0]).send()
     except MatcherException:
         raise
     except Exception as e:

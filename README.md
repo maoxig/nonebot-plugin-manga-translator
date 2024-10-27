@@ -60,24 +60,25 @@ DRIVER=~fastapi+~httpx
 
 ### 获取API
 
-请在机器人目录下的.env.*里填写以下选项(至少填一个平台的)，获取方式已整理好，见下方
+请在机器人目录下的.env.*里填写以下选项(至少填一个平台的，如果没有就不用填)，获取方式已整理好，见下方
 
-~~个人感觉就漫画翻译而言,这几家API的效果大致为有道>=百度≈离线>=火山,且火山翻译对竖版日文的翻译效果很差~~
+~~个人感觉就漫画翻译而言,这几家API的效果大致为有道>=百度≈离线>=火山,且火山翻译对竖版日文的翻译效果很差，不过离线API可以通过修改模型来获得自定义的效果~~
 
-|          配置项           | 类型  | 默认值 |                 示例                  | 说明              | API定价                                                |
-| :-----------------------: | :---: | :----: | :-----------------------------------: | :---------------- | :----------------------------------------------------- |
-|        有道翻译API        |   -   |   -    |                   -                   | -                 | 新用户送一定额度,梯度收费，0<月调用量<100w时,0.04元/张 |
-|      youdao_app_key       |  str  |   ""   |        youdao_app_key="xxxxx"         | 应用ID            |                                                        |
-|     youdao_app_secret     |  str  |   ""   |      youdao_app_secret="xxxxxx"       | 应用秘钥          |                                                        |
-|        百度翻译API        |   -   |   -    |                   -                   | -                 | 每月1万次免费调用量，之后按梯度收费,最高0.04元/次      |
-|       baidu_app_id        |  str  |   ""   |         baidu_app_id="66666"          | APP ID            |                                                        |
-|       baidu_app_key       |  str  |   ""   |        baidu_app_key="xxxxxx"         | 密钥              |                                                        |
-|        火山翻译API        |   -   |   -    |                   -                   | -                 | 每月前100张免费，之后0.04元/张                         |
-|   huoshan_access_key_id   |  str  |   ""   |     huoshan_access_key_id="AK***"     | Access Key ID     |                                                        |
-| huoshan_secret_access_key |  str  |   ""   |   huoshan_secret_access_key="UT**"    | Secret Access Key |                                                        |
-|        离线翻译API        |   -   |   -    |                   -                   | -                 | 可能是电费?                                            |
-|        offline_url        |  str  |   ""   | offline_url="<http://127.0.0.1:5003>" | 见下方说明        |                                                        |
-|    其他翻译API(待更新)    |   -   |   -    |                   -                   | -                 |                                                        |
+|          配置项           | 类型  |                   默认值                    |                           示例                           | 说明                                                                                   | API定价                                                    |
+| :-----------------------: | :---: | :-----------------------------------------: | :------------------------------------------------------: | :------------------------------------------------------------------------------------- | :--------------------------------------------------------- |
+|        有道翻译API        |   -   |                      -                      |                            -                             | -                                                                                      | 新用户送一定额度,梯度收费，0<月调用量<100w时,0.04元/张     |
+|      youdao_app_key       |  str  |                     ""                      |                  youdao_app_key="xxxxx"                  | 应用ID                                                                                 |                                                            |
+|     youdao_app_secret     |  str  |                     ""                      |                youdao_app_secret="xxxxxx"                | 应用秘钥                                                                               |                                                            |
+|        百度翻译API        |   -   |                      -                      |                            -                             | -                                                                                      | 每月1万次免费调用量，之后按梯度收费,最高0.04元/次          |
+|       baidu_app_id        |  str  |                     ""                      |                   baidu_app_id="66666"                   | APP ID                                                                                 |                                                            |
+|       baidu_app_key       |  str  |                     ""                      |                  baidu_app_key="xxxxxx"                  | 密钥                                                                                   |                                                            |
+|        火山翻译API        |   -   |                      -                      |                            -                             | -                                                                                      | 每月前100张免费，之后0.04元/张                             |
+|   huoshan_access_key_id   |  str  |                     ""                      |              huoshan_access_key_id="AK***"               | Access Key ID                                                                          |                                                            |
+| huoshan_secret_access_key |  str  |                     ""                      |             huoshan_secret_access_key="UT**"             | Secret Access Key                                                                      |                                                            |
+|        离线翻译API        |   -   |                      -                      |                            -                             | -                                                                                      | 可能是电费?                                                |
+|        offline_url        |  str  |                     ""                      |          offline_url="<http://127.0.0.1:5003>"           | 见下方说明                                                                             |                                                            |
+|       offline_api_data        | dict  | {"translator": "youdao", "tgt_lang": "CHS"} | offline_api_data={"translator": "youdao", "tgt_lang": "CHS"} | 参考 [manga-image-translator](https://github.com/zyddnys/manga-image-translator)的文档 | 需要注意.env里面填写如果字典是跨行字典，需要添加一层单引号包裹 |
+|    其他翻译API(待更新)    |   -   |                      -                      |                            -                             | -                                                                                      |                                                            |
 
 ## 🔑API获取
 
@@ -123,10 +124,25 @@ DRIVER=~fastapi+~httpx
 
    3. 如果你的设备没有成功安装cuda(要求pytorch的版本和cuda对应，不对应请重装)，请去掉参数`--use-cuda`，如果图片处理过程中爆显存，请改成`--use-cuda-limited`
 
-   4. 你可以访问控制台给出的网址，**尝试先本地翻译一张图片**，此时会根据选项下载需要的模型(为防止下载失败，也可以提前手动下载)
+   4. 你可以访问控制台给出的网址，**尝试先手动翻译一张图片**，此时会根据选项下载需要的模型(为防止下载失败，也可以提前手动下载)
    5. 如果bot和翻译器在同一台设备，那么.env填写`offline_url="http://127.0.0.1:5003"`即可，如果不在同一台设备，你**可能**还需要放行防火墙、端口转发等，并且填写内容也会有所变化
-   6. 最后你**可能**还需要修改一下本插件的代码，找到本插件`utils.py`的`offline`函数，根据注释和[文档](https://github.com/zyddnys/manga-image-translator/blob/main/README.md),修改字典`data`，从而指定你想要的OCR模型和翻译模型(目前是用了offline模型,你可以改成别的)
+   6. 关于.env填写的offline_api_data，需要参考[文档](https://github.com/zyddnys/manga-image-translator/blob/main/README.md),修改字典`data`，从而指定你想要的OCR模型和翻译模型以及修复模型。需要注意在填写.env时，如果是多行字典，参考[NB文档](https://nonebot.dev/docs/next/appendices/config#%E9%85%8D%E7%BD%AE%E9%A1%B9%E8%A7%A3%E6%9E%90)，需要在外面添加引号，例如
+    
+      ```
+      offline_api_data =
+      '
+      {
+        "translator": "youdao",
+        "tgt_lang": "CHS",
+        "ocr": "mocr"
+      }
+      '
+      ```
 
+      单行字典则不需要
+      ```
+      offline_api_data ={"translator": "youdao","tgt_lang": "CHS","ocr": "mocr"}
+      ```
 </details>
 
 ## 🎉命令
@@ -156,6 +172,10 @@ DRIVER=~fastapi+~httpx
 
 <details>
 <summary>点击展开</summary>
+
+- 2024-10-27:
+
+  - 将offline的配置移到.env，增强错误提示
 
 - 2024-08-17:
 
