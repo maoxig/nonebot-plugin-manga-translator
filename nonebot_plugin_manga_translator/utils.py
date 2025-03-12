@@ -1,3 +1,4 @@
+import io
 import httpx
 import uuid
 import base64
@@ -35,7 +36,7 @@ class MangaTranslator:
         if self.config.offline_url:
             self.api.append(self.offline)
             logger.info("检测到离线模型")
-            logger.info(f"离线请求api_data: {str(self.config.offline_api_data)}")
+            logger.info(f"离线请求api_config: {str(self.config.offline_api_config)}")
 
         if self.config.huoshan_access_key_id:
             self.api.append(self.huoshan)
@@ -47,9 +48,9 @@ class MangaTranslator:
                 result = await api(image_bytes)
                 return result
             except httpx.HTTPError as e:
-                logger.warning(f"API[{api}]不可用：{e} 尝试切换下一个")
+                logger.warning(f"API[{api.__name__}]不可用：{e} 尝试切换下一个")
             except Exception as e:
-                logger.error(f"API[{api}]出现未知错误：{e} 尝试切换下一个")
+                logger.error(f"API[{api.__name__}]出现未知错误：{e} 尝试切换下一个")
         return None, "无可用API"
 
     async def youdao(self, image_bytes) -> Tuple[bytes, str]:
@@ -132,45 +133,61 @@ class MangaTranslator:
     ) -> Tuple[Union[None, bytes], str]:
         """离线翻译"""
         # 提交任务
-        async with httpx.AsyncClient() as client:
-
-            img_content = image_bytes
-            form = {"file": ("image.png", img_content, "image/png")}
-            response = await client.post(
-                self.config.offline_url + "/submit",
-                files=form,
-                data=self.config.offline_api_data,
-            )  # 改为本地翻译器
+        try:
+            async with httpx.AsyncClient(timeout=timeout) as client:
+                form = {"image": ("image.png", image_bytes, "image/png")}
+                response = await client.post(
+                    self.config.offline_url + "/translate/with-form/image/stream",
+                    files=form,
+                    data={"config": json.dumps(self.config.offline_api_config)},
+                )
 
             response.raise_for_status()  # 检查响应状态
-            task_id = response.json()["task_id"]
-            req = {"taskid": task_id}
 
-            # 轮询获取翻译结果，超时时间为60s
-            async def check_translation_result() -> Tuple[Union[None, bytes], str]:
-                start_time = time.monotonic()
-                while True:
-                    response = await client.get(
-                        self.config.offline_url + "/task-state", params=req
-                    )
-                    response.raise_for_status()
-                    state = response.json()["state"]
-                    finished = response.json()["finished"]
-                    if state == "finished" or finished:
-                        break
-                    if time.monotonic() - start_time > timeout:
-                        return None, "超时"
-                    await asyncio.sleep(1)
-
-                img_data = await client.get(
-                    url=self.config.offline_url + "/result/" + task_id
-                )
-                if img_data.status_code == 200 and img_data.content:
-                    return img_data.content, "离线"
-                else:
-                    return None, "离线API出错"
-
-            return await check_translation_result()
+            if response.status_code !=200:
+                logger.error(f"离线API请求出现错误：code:{response.status_code}, text:{response.text}")
+                return None, "离线"
+            buffer = io.BytesIO(response.content)
+            output_images = []  # 保存所有结果图片
+            while True:
+                # 读取状态码（1字节）
+                status_byte = buffer.read(1)
+                if not status_byte:
+                    break
+                status = int.from_bytes(status_byte, byteorder="big")
+                # 读取数据长度（4字节，大端序）
+                size_bytes = buffer.read(4)
+                if len(size_bytes) < 4:
+                    logger.error("数据长度不完整")
+                    break
+                data_size = int.from_bytes(size_bytes, byteorder="big")
+                # 读取数据内容
+                data = buffer.read(data_size)
+                if len(data) < data_size:
+                    logger.error(f"数据不完整，期望 {data_size} 字节，实际 {len(data)} 字节")
+                    break
+                if status == 0:
+                    output_images.append(data)
+                elif status == 1:
+                    # 进度更新
+                    logger.info(f"进度更新：{data.decode('utf-8')}")
+                elif status == 2:
+                    # 错误信息
+                    error_msg = data.decode("utf-8")
+                    raise Exception(f"服务器返回错误：{error_msg}")
+                elif status == 3:
+                    # 等待队列位置：解析为整数
+                    logger.info(f"等待队列位置：{int.from_bytes(data, byteorder='big')}")
+                elif status == 4:
+                    # 等待翻译实例
+                    logger.info("等待翻译实例")
+            if not output_images:
+                logger.error("离线API返回数据为空")
+                return None, "离线"
+            return output_images[0], "离线"
+        except Exception as e:
+            logger.error(f"离线API请求出现错误：{e}")
+            return None, "离线"
 
     async def huoshan(self, image_bytes: bytes) -> Tuple[bytes, str]:
         """火山引擎翻译，构建签名"""

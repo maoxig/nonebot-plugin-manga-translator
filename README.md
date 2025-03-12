@@ -60,25 +60,25 @@ DRIVER=~fastapi+~httpx
 
 ### 获取API
 
-请在机器人目录下的.env.*里填写以下选项(至少填一个平台的，如果没有就不用填)，获取方式已整理好，见下方
+请在机器人目录下的.env.*里填写以下选项(至少填一个平台的，如果没有就不用填)，获取方式见下方
 
-~~个人感觉就漫画翻译而言,这几家API的效果大致为有道>=百度≈离线>=火山,且火山翻译对竖版日文的翻译效果很差，不过离线API可以通过修改模型来获得自定义的效果~~
 
-|          配置项           | 类型  |                   默认值                    |                           示例                           | 说明                                                                                   | API定价                                                    |
-| :-----------------------: | :---: | :-----------------------------------------: | :------------------------------------------------------: | :------------------------------------------------------------------------------------- | :--------------------------------------------------------- |
-|        有道翻译API        |   -   |                      -                      |                            -                             | -                                                                                      | 新用户送一定额度,梯度收费，0<月调用量<100w时,0.04元/张     |
-|      youdao_app_key       |  str  |                     ""                      |                  youdao_app_key="xxxxx"                  | 应用ID                                                                                 |                                                            |
-|     youdao_app_secret     |  str  |                     ""                      |                youdao_app_secret="xxxxxx"                | 应用秘钥                                                                               |                                                            |
-|        百度翻译API        |   -   |                      -                      |                            -                             | -                                                                                      | 每月1万次免费调用量，之后按梯度收费,最高0.04元/次          |
-|       baidu_app_id        |  str  |                     ""                      |                   baidu_app_id="66666"                   | APP ID                                                                                 |                                                            |
-|       baidu_app_key       |  str  |                     ""                      |                  baidu_app_key="xxxxxx"                  | 密钥                                                                                   |                                                            |
-|        火山翻译API        |   -   |                      -                      |                            -                             | -                                                                                      | 每月前100张免费，之后0.04元/张                             |
-|   huoshan_access_key_id   |  str  |                     ""                      |              huoshan_access_key_id="AK***"               | Access Key ID                                                                          |                                                            |
-| huoshan_secret_access_key |  str  |                     ""                      |             huoshan_secret_access_key="UT**"             | Secret Access Key                                                                      |                                                            |
-|        离线翻译API        |   -   |                      -                      |                            -                             | -                                                                                      | 可能是电费?                                                |
-|        offline_url        |  str  |                     ""                      |          offline_url="<http://127.0.0.1:5003>"           | 见下方说明                                                                             |                                                            |
-|       offline_api_data        | dict  | {"translator": "youdao", "tgt_lang": "CHS"} | offline_api_data={"translator": "youdao", "tgt_lang": "CHS"} | 参考 [manga-image-translator](https://github.com/zyddnys/manga-image-translator)的文档 | 需要注意.env里面填写如果字典是跨行字典，需要添加一层单引号包裹 |
-|    其他翻译API(待更新)    |   -   |                      -                      |                            -                             | -                                                                                      |                                                            |
+
+|          配置项           | 类型  |                 默认值                  |                 示例                  | 说明                                                                                   | API定价                                                |
+| :-----------------------: | :---: | :-------------------------------------: | :-----------------------------------: | :------------------------------------------------------------------------------------- | :----------------------------------------------------- |
+|        有道翻译API        |   -   |                    -                    |                   -                   | -                                                                                      | 新用户送一定额度,梯度收费，0<月调用量<100w时,0.04元/张 |
+|      youdao_app_key       |  str  |                   ""                    |        youdao_app_key="xxxxx"         | 应用ID                                                                                 |                                                        |
+|     youdao_app_secret     |  str  |                   ""                    |      youdao_app_secret="xxxxxx"       | 应用秘钥                                                                               |                                                        |
+|        百度翻译API        |   -   |                    -                    |                   -                   | -                                                                                      | 每月1万次免费调用量，之后按梯度收费,最高0.04元/次      |
+|       baidu_app_id        |  str  |                   ""                    |         baidu_app_id="66666"          | APP ID                                                                                 |                                                        |
+|       baidu_app_key       |  str  |                   ""                    |        baidu_app_key="xxxxxx"         | 密钥                                                                                   |                                                        |
+|        火山翻译API        |   -   |                    -                    |                   -                   | -                                                                                      | 每月前100张免费，之后0.04元/张                         |
+|   huoshan_access_key_id   |  str  |                   ""                    |     huoshan_access_key_id="AK***"     | Access Key ID                                                                          |                                                        |
+| huoshan_secret_access_key |  str  |                   ""                    |   huoshan_secret_access_key="UT**"    | Secret Access Key                                                                      |                                                        |
+|        离线翻译API        |   -   |                    -                    |                   -                   | -                                                                                      | -                                           |
+|        offline_url        |  str  |                   ""                    | offline_url="<http://127.0.0.1:8000>" | 见下方说明                                                                             |                                                        |
+|     offline_api_config      | dict  | 默认设置是offline模型+CHS目标语言不用改 |          要改的话见下方说明           | 参考 [manga-image-translator](https://github.com/zyddnys/manga-image-translator)的文档 | 需要注意嵌套字典的写法                                 |
+|    其他翻译API(待更新)    |   -   |                    -                    |                   -                   | -                                                                                      |                                                        |
 
 ## 🔑API获取
 
@@ -114,35 +114,28 @@ DRIVER=~fastapi+~httpx
 <summary>离线翻译</summary>
 (该方案对设备配置要求较高，建议在有足够的硬盘空间、内存、显存，或有一台能为bot处理请求的服务器时考虑使用该方案)
 
-   1. 参考[manga-image-translator](https://github.com/zyddnys/manga-image-translator)的说明，克隆仓库，并安装相关依赖(可能需要额外安装`pydensecrf`)
-   2. 安装好依赖后，在仓库目录下运行
+   1. 参考[manga-image-translator](https://github.com/zyddnys/manga-image-translator)的说明，克隆仓库，并安装相关依赖(可能需要手动额外安装`pydensecrf`)
+   2. 安装好依赖后，在serber目录下运行
 
       ```python
-      python -m manga_translator -v --mode web --use-cuda
-      # the demo will be serving on http://127.0.0.1:5003，此时会提供一个网页，可以点击打开
+      # manga-image-translator/server 目录下
+      python main.py --use-cuda
+      # the demo will be serving on http://127.0.0.1:8000，此时会提供一个网页，可以点击打开
       ```
 
-   3. 如果你的设备没有成功安装cuda(要求pytorch的版本和cuda对应，不对应请重装)，请去掉参数`--use-cuda`，如果图片处理过程中爆显存，请改成`--use-cuda-limited`
+   3. 如果你的设备没有成功安装torch-cuda(要求pytorch的版本和cuda对应，不对应请重装，这里建议使用conda)，请去掉参数`--use-cuda`，如果图片处理过程中爆显存，请改成`--use-cuda-limited`
 
    4. 你可以访问控制台给出的网址，**尝试先手动翻译一张图片**，此时会根据选项下载需要的模型(为防止下载失败，也可以提前手动下载)
-   5. 如果bot和翻译器在同一台设备，那么.env填写`offline_url="http://127.0.0.1:5003"`即可，如果不在同一台设备，你**可能**还需要放行防火墙、端口转发等，并且填写内容也会有所变化
-   6. 关于.env填写的offline_api_data，需要参考[文档](https://github.com/zyddnys/manga-image-translator/blob/main/README.md),修改字典`data`，从而指定你想要的OCR模型和翻译模型以及修复模型。需要注意在填写.env时，如果是多行字典，参考[NB文档](https://nonebot.dev/docs/next/appendices/config#%E9%85%8D%E7%BD%AE%E9%A1%B9%E8%A7%A3%E6%9E%90)，需要在外面添加引号，例如
+   5. 如果bot和翻译器在同一台设备，那么.env填写`offline_url="http://127.0.0.1:8000"`即可，如果不在同一台设备，你**可能**还需要放行防火墙、端口转发等，并且填写内容也会有所变化
+   6. 关于.env填写的offline_api_config（或者你也可以直接改源码），默认情况不需要改，需要参考[文档](https://github.com/zyddnys/manga-image-translator/blob/main/README.md),修改字典`config`，从而指定你想要的OCR模型和翻译模型以及修复模型。需要注意在填写.env时，如果是**多行嵌套**字典，参考[NB文档](https://nonebot.dev/docs/next/appendices/config#%E9%85%8D%E7%BD%AE%E9%A1%B9%E8%A7%A3%E6%9E%90)，需要根据`env_nested_delimiter`配置嵌套字典，在层与层之间使用双下划线`__`分隔，比如默认的配置就等价于写入.env
     
       ```
-      offline_api_data =
-      '
-      {
-        "translator": "youdao",
-        "tgt_lang": "CHS",
-        "ocr": "mocr"
-      }
-      '
+      offline_api_config__translator__target_lang="CHS"
+      offline_api_config__translator__translator="offline"
       ```
 
-      单行字典则不需要
-      ```
-      offline_api_data ={"translator": "youdao","tgt_lang": "CHS","ocr": "mocr"}
-      ```
+      默认情况
+
 </details>
 
 ## 🎉命令
@@ -172,6 +165,10 @@ DRIVER=~fastapi+~httpx
 
 <details>
 <summary>点击展开</summary>
+
+- 2025-03-12:
+
+  - 支持新版manga-image-translator，config配置和api均有所变化
 
 - 2024-10-27:
 
